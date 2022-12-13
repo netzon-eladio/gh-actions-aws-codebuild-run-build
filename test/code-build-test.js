@@ -65,14 +65,17 @@ describe("githubInputs", () => {
     process.env[`GITHUB_EVENT_NAME`] = "not_pull_request";
     const test = githubInputs();
     expect(test).to.haveOwnProperty("projectName").and.to.equal(projectName);
-    expect(test).to.haveOwnProperty("sourceVersion").and.to.equal(sha);
     expect(test).to.haveOwnProperty("owner").and.to.equal(`owner`);
     expect(test).to.haveOwnProperty("repo").and.to.equal(`repo`);
     expect(test)
       .to.haveOwnProperty("buildspecOverride")
       .and.to.equal(undefined);
-    expect(test).to.haveOwnProperty("computeTypeOverride").and.to.equal(undefined);
-    expect(test).to.haveOwnProperty("environmentTypeOverride").and.to.equal(undefined);
+    expect(test)
+      .to.haveOwnProperty("computeTypeOverride")
+      .and.to.equal(undefined);
+    expect(test)
+      .to.haveOwnProperty("environmentTypeOverride")
+      .and.to.equal(undefined);
     expect(test).to.haveOwnProperty("imageOverride").and.to.equal(undefined);
     expect(test).to.haveOwnProperty("envPassthrough").and.to.deep.equal([]);
   });
@@ -115,16 +118,17 @@ describe("githubInputs", () => {
     context.payload = { pull_request: { head: { sha: pullRequestSha } } };
     const test = githubInputs();
     expect(test).to.haveOwnProperty("projectName").and.to.equal(projectName);
-    expect(test)
-      .to.haveOwnProperty("sourceVersion")
-      .and.to.equal(pullRequestSha);
     expect(test).to.haveOwnProperty("owner").and.to.equal(`owner`);
     expect(test).to.haveOwnProperty("repo").and.to.equal(`repo`);
     expect(test)
       .to.haveOwnProperty("buildspecOverride")
       .and.to.equal(undefined);
-    expect(test).to.haveOwnProperty("computeTypeOverride").and.to.equal(undefined);
-    expect(test).to.haveOwnProperty("environmentTypeOverride").and.to.equal(undefined);
+    expect(test)
+      .to.haveOwnProperty("computeTypeOverride")
+      .and.to.equal(undefined);
+    expect(test)
+      .to.haveOwnProperty("environmentTypeOverride")
+      .and.to.equal(undefined);
     expect(test).to.haveOwnProperty("imageOverride").and.to.equal(undefined);
     expect(test).to.haveOwnProperty("envPassthrough").and.to.deep.equal([]);
   });
@@ -164,23 +168,19 @@ describe("inputs2Parameters", () => {
     process.env[`GITHUB_SHA`] = sha;
     const test = inputs2Parameters({
       projectName,
-      sourceVersion: sha,
       owner: "owner",
       repo: "repo",
     });
     expect(test).to.haveOwnProperty("projectName").and.to.equal(projectName);
-    expect(test).to.haveOwnProperty("sourceVersion").and.to.equal(sha);
-    expect(test)
-      .to.haveOwnProperty("sourceTypeOverride")
-      .and.to.equal("GITHUB");
-    expect(test)
-      .to.haveOwnProperty("sourceLocationOverride")
-      .and.to.equal(`https://github.com/owner/repo.git`);
     expect(test)
       .to.haveOwnProperty("buildspecOverride")
       .and.to.equal(undefined);
-    expect(test).to.haveOwnProperty("computeTypeOverride").and.to.equal(undefined);
-    expect(test).to.haveOwnProperty("environmentTypeOverride").and.to.equal(undefined);
+    expect(test)
+      .to.haveOwnProperty("computeTypeOverride")
+      .and.to.equal(undefined);
+    expect(test)
+      .to.haveOwnProperty("environmentTypeOverride")
+      .and.to.equal(undefined);
     expect(test).to.haveOwnProperty("imageOverride").and.to.equal(undefined);
 
     // I send everything that starts 'GITHUB_'
@@ -213,21 +213,14 @@ describe("inputs2Parameters", () => {
     process.env[`GITHUB_SHA`] = sha;
     const test = inputs2Parameters({
       projectName,
-      sourceVersion: sha,
       owner: "owner",
       repo: "repo",
       computeTypeOverride: "BUILD_GENERAL1_LARGE",
       environmentTypeOverride: "LINUX_CONTAINER",
-      imageOverride: "111122223333.dkr.ecr.us-west-2.amazonaws.com/codebuild-docker-repo"
+      imageOverride:
+        "111122223333.dkr.ecr.us-west-2.amazonaws.com/codebuild-docker-repo",
     });
     expect(test).to.haveOwnProperty("projectName").and.to.equal(projectName);
-    expect(test).to.haveOwnProperty("sourceVersion").and.to.equal(sha);
-    expect(test)
-      .to.haveOwnProperty("sourceTypeOverride")
-      .and.to.equal("GITHUB");
-    expect(test)
-      .to.haveOwnProperty("sourceLocationOverride")
-      .and.to.equal(`https://github.com/owner/repo.git`);
     expect(test)
       .to.haveOwnProperty("buildspecOverride")
       .and.to.equal(undefined);
@@ -239,7 +232,9 @@ describe("inputs2Parameters", () => {
       .and.to.equal(`LINUX_CONTAINER`);
     expect(test)
       .to.haveOwnProperty("imageOverride")
-      .and.to.equal(`111122223333.dkr.ecr.us-west-2.amazonaws.com/codebuild-docker-repo`);
+      .and.to.equal(
+        `111122223333.dkr.ecr.us-west-2.amazonaws.com/codebuild-docker-repo`
+      );
 
     // I send everything that starts 'GITHUB_'
     expect(test)
@@ -281,7 +276,6 @@ describe("inputs2Parameters", () => {
 
     const test = inputs2Parameters({
       projectName,
-      sourceVersion: sha,
       owner: "owner",
       repo: "repo",
       envPassthrough: ["one", "two", "three", "four"],
